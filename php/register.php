@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>registration</title>
-  <!-- index.html -->
+  
   <a href="register.php"></a>
   
   
