@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ email: '', password: '' }">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+  <form action="/php/prem-may-exam/auth-project/php/login.php" method="POST"
+        class="bg-white p-6 rounded shadow-md w-full max-w-sm">
+    <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+
+    <label class="block mb-2">Email</label>
+    <input type="email" name="email" x-model="email" required
+           class="w-full border px-3 py-2 rounded mb-4" />
+
+    <label class="block mb-2">Password</label>
+    <input type="password" name="password" x-model="password" required
+           class="w-full border px-3 py-2 rounded mb-4" />
+
+    <button type="submit"
+            class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+      Login
+    </button>
+  </form>
+
+</body>
+</html>

@@ -1,30 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>registration</title>
-  
-  <a href="register.php"></a>
-  
-  
-</head>
-<body>
+<?php
+include 'db.php';
 
-  <h1>registration form</h1>
-  <form action="../ backend /register.php " method="POST">
-    <input  type="email" name="email" placeholder="email" required><br>
-    <input type="phone" name="phone" placeholder="phone" required><br>
-    <input type="first name" name="first name" placeholder="first name" required><br>
-    <input type="Last name" name="Last name" placeholder="Last name" required><br>
-    <input type="choose password" name="choose password" placeholder="choose password" required><br>
-    <input type="confirm password" name="confirm password" placeholder="confirm password" required><br>
-    <input type="mared" name="mared" placeholder="mared" required><br>
-    <input type="submit" value="Register">
-  </form>
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-  
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    $marital_status = $_POST['marital_status'];
 
-  
-</body>
-</html>
+    if ($password !== $confirm_password) {
+        die("❌ Password and Confirm Password do not match!");
+    }
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO users (email, phone, first_name, last_name, password, marital_status) VALUES (?, ?, ?, ?, ?, ?)";
+
+    // ✅ Prepare statement
+    $stmt = $conn->prepare($sql);
+
+
+    // ❌ If prepare fails
+    if (!$stmt) {
+        die("❌ Prepare failed: ". $conn->error);
+    }
+
+    // ✅ Bind parameters
+    $stmt->bind_param("ssssss", $email, $phone, $first_name, $last_name, $password_hash, $marital_status);
+
+    // ✅ Execute
+    if ($stmt->execute()) {
+        echo "✅ Registration successful! <a href='../public/login.html'>Login here</a>";
+    } else {
+        echo "❌ Execution failed: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+} else {
+    echo "❌ Invalid request";
+}
+?>
