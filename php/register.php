@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     $marital_status = $_POST['marital_status'];
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
 
     if ($password !== $confirm_password) {
         die("❌ Password and Confirm Password do not match!");
@@ -19,8 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $sql = "INSERT INTO users (email, phone, first_name, last_name, password, marital_status) VALUES (?, ?, ?, ?, ?, ?)";
 
+
     // ✅ Prepare statement
     $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssss", $email, $phone, $first_name, $last_name, $password_hash, $marital_status);
+    
+
 
 
     // ❌ If prepare fails
@@ -44,3 +50,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo "❌ Invalid request";
 }
 ?>
+
+
