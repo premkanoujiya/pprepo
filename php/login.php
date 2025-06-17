@@ -19,10 +19,10 @@ require 'db.php';
                 $_SESSION['user'] = $user['email'];
                 echo "Login successful!";
             } else {
-                echo "Incorrect password. Please try again.";  // yahan sahi error message
+                echo "invalid password"; 
             }
         } else {
-            echo " Invalid email or user not found.";  // yahan bhi sahi error message
+            echo " Invalid email or user not found.";
         }
     } else {
         echo " Please submit the form.";
