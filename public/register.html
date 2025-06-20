@@ -1,9 +1,13 @@
-
 <!DOCTYPE html>
+<form action="../public/login.html" method="POST">
+  
+</form>
+
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registration Form</title>
   <style>
     * {
@@ -63,20 +67,37 @@
     }
   </style>
 </head>
+
 <body>
   <div class="form-container">
     <h1>Registration Form</h1>
     <form action="../php/register.php" method="POST">
+
+
       <input type="email" name="email" placeholder="Email" required>
-      <input type="tel" name="phone" placeholder="Phone Number" required>
-      <input type="text" name="first_name" placeholder="First Name" required>
-      <input type="text" name="last_name" placeholder="Last Name" required>
+
+
+      <input type="tel" name="phone" placeholder="Phone Number" pattern="[0-9]{10}"
+        title="Please enter a 10-digit phone number" required>
+
+
+      <input type="text" name="first_name" placeholder="First Name" pattern="[A-Za-z]+"
+        title="First name should contain only alphabets" required>
+
+      <input type="text" name="last_name" placeholder="Last Name" pattern="[A-Za-z]+"
+        title="Last name should contain only alphabets" required>
+
+
       <input type="password" name="password" placeholder="Choose Password" required>
+
+
       <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-      
+
       <input type="submit" value="Register">
     </form>
   </div>
-</body>
-</html>
+      
 
+</body>
+
+</html>
