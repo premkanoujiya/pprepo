@@ -1,46 +1,56 @@
-
 <?php
-include 'db.php';
+ob_start(); // Start output buffering (prevents header errors)
+require_once "db.php";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+$email = $_POST['email'];
+$phone = $_POST['phone'];
+$firstName = $_POST['first_name'];
+$lastName = $_POST['last_name'];
+$password = $_POST['password'];
+$confirmPassword = $_POST['confirm_password'];
 
-    if ($password !== $confirm_password) {
-        die("❌ Password and Confirm Password do not match!");
-    }
 
-    // ✅ Password hash once only
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-    // ✅ SQL query
-    $sql = "INSERT INTO users (email, phone, first_name, last_name, password) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-
-    if (!$stmt) {
-        die("❌ Prepare failed: " . $conn->error);
-    }
-
-    // ✅ Corrected bind_param
-    $stmt->bind_param("sssss", $email, $phone, $first_name, $last_name, $password_hash);
-
-    // ✅ Execute
-    if ($stmt->execute()) {
-        echo "✅ Registration successful! <a href='../public/login.html'>Login here</a>";
-    } else {
-        echo "❌ Execution failed: " . $stmt->error;
-    }
-
-    $stmt->close();
-    $conn->close();
-} else {
-    echo "❌ Invalid request";
+if ($password !== $confirmPassword) {
+    echo "<script>alert('Passwords do not match'); window.history.back();</script>";
+    exit();
 }
+
+
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+
+$sql = "SELECT * FROM users WHERE email = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    echo "<script>alert('Email already registered'); window.history.back();</script>";
+    exit();
+}
+
+
+$sql = "INSERT INTO users (email, phone, first_name, last_name, password) VALUES (?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sssss", $email, $phone, $firstName, $lastName, $hashedPassword);
+
+if ($stmt->execute()) {
+    
+    header("Location: " . dirname($_SERVER['REQUEST_URI']) . "/../public/login.html");
+    exit();
+} else {
+    echo "<script>alert('Registration failed'); window.history.back();</script>";
+}
+ob_end_flush(); 
+?>
+
+
+
+
+
+
 
 
 
