@@ -1,8 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
-include 'db.php'; // DB connection
+include 'db.php'; // your DB connection
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $first_name = $_POST['first_name'] ?? '';
@@ -15,17 +14,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    // ✅ Check if email already exists
+    $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $check->bind_param("s", $email);
+    $check->execute();
+    $result = $check->get_result();
+    if ($result->num_rows > 0) {
+        echo "❌ This email is already registered.";
+        exit;
+    }
+    $check->close();
+
+    // ✅ Insert new record
     $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, phone) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $first_name, $last_name, $email, $phone);
 
     if ($stmt->execute()) {
         echo "✅ Registration successful!";
     } else {
-        echo "❌ Error: " . $stmt->error;
+        echo "❌ Database Error: " . $stmt->error;
     }
 
     $stmt->close();
     $conn->close();
 }
-?> 
-
+?>
